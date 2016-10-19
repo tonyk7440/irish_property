@@ -1,23 +1,43 @@
 # Capture Data from daft.ie
+
 # Load libraries
 library(rvest)
 library(stringr)
+library(tidyr)
+library(rpart)
 
+
+# Initialise empty data frame
 property <- data.frame()
-html <- read_html("http://www.daft.ie/cork-city/property-for-sale/")
-cast <- html_nodes(html,".box") %>% 
-    html_text(trim=TRUE) %>% ifelse(. == "", NA, .) 
-nawhite <- str_trim(cast)
-nawhite[1] <- paste("1. \n \n ", nawhite[1])
-nawhite <- str_replace(nawhite, "-", "\n")
-nawhite <- str_replace_all(nawhite, "\\|", "")
-nawhite <- str_replace_all(nawhite, "Agent: ", "")
-curr <- as.data.frame(str_split_fixed(nawhite, "\n", n = 50))
-property <- rbind(property, curr)
+i <- 0
+while(i < 100) {
+    if( i < 10) {
+        stub <- c("http://www.daft.ie/cork-city/property-for-sale/")
+        html <- read_html(stub)
+        cast <- html_nodes(html,"#sr_content .truncate a , .info li, .price, .search_result_title_box a, .date_entered") %>% 
+            html_text(trim=TRUE) %>% ifelse(. == "", NA, .) %>%
+            str_trim()
+        cast[1] <- paste("1. \n \n ", cast[1])
+    }
+    else{
+        stub <- c("http://www.daft.ie/cork-city/property-for-sale/?offset=")
+        link <- paste(stub,i, sep = "")
+        print(paste("Visiting Link: ", link))
+        html <- read_html(link)
+        cast <- html_nodes(html,".box") %>% 
+            html_text(trim=TRUE) %>% ifelse(. == "", NA, .) %>%
+            str_trim()
+    }
+    nawhite <- str_replace(cast, "-", "\n")
+    nawhite <- str_replace_all(nawhite, "\\|", "")
+    nawhite <- str_replace_all(nawhite, "Agent: ", "")
+    curr <- as.data.frame(str_split_fixed(nawhite, "\n", n = 50))
+    property <- rbind(property, curr)
+    i <- i + 10
+}
 
-stub <- c("http://www.daft.ie/cork-city/property-for-sale/?offset=")
 
-# Get properties
+#### Old
 i = 10
 while(i < 100) {
     link <- paste(stub,i, sep = "")
@@ -33,6 +53,7 @@ while(i < 100) {
     property <- rbind(property, curr)
     i <- i + 10
 }
+#### End Old
 
 # Convert every cell to character type
 property[] <- lapply(property, as.character)
@@ -119,6 +140,9 @@ Tree <- rpart(Baths ~ AddressFive + Price + Beds,
 #Impute Predictions into dataset
 clean$Baths[is.na(clean$Baths)] <- predict(Tree, clean[is.na(clean$Baths),])
 
+# Round Baths column
+clean$Baths <- round(clean$Baths,0)
+
 # Clean price change column
 clean$priceChange <- gsub(",|\u20AC", "", clean$priceChange)
 clean$priceChange[is.na(clean$priceChange)] <- 0
@@ -126,14 +150,7 @@ clean$priceChange[is.na(clean$priceChange)] <- 0
 # Remove duplicate type2 column
 clean$Type2 <- NULL
 
+# Trim to useful information
+clean <- clean[,-c(12:53)]
 
-
-
-
-priceChange <- clean[hits,]
-
-
-# Removed lines
-# Fix first irregular entry
-#nawhite[1] <- paste("1. \n \n ", nawhite[1])
-#done <- gsub("[[:punct:]]", "", nawhite)
+write.csv(clean, "input/properties.csv", row.names = FALSE)
