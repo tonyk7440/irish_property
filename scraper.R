@@ -9,7 +9,9 @@ library(rpart)
 
 # Initialise empty data frame
 property <- data.frame()
+
 i <- 0
+
 while(i < 100) {
     if( i < 10) {
         stub <- c("http://www.daft.ie/cork-city/property-for-sale/")
@@ -37,23 +39,6 @@ while(i < 100) {
 }
 
 
-#### Old
-i = 10
-while(i < 100) {
-    link <- paste(stub,i, sep = "")
-    print(paste("Visiting Link: ", link))
-    html <- read_html(link)
-    cast <- html_nodes(html,".box") %>% 
-        html_text(trim=TRUE) %>% ifelse(. == "", NA, .) 
-    nawhite <- str_trim(cast)
-    nawhite <- str_replace(nawhite, "-", "\n")
-    nawhite <- str_replace_all(nawhite, "\\|", "")
-    nawhite <- str_replace_all(nawhite, "Agent: ", "")
-    curr <- as.data.frame(str_split_fixed(nawhite, "\n", n = 50))
-    property <- rbind(property, curr)
-    i <- i + 10
-}
-#### End Old
 
 # Convert every cell to character type
 property[] <- lapply(property, as.character)
@@ -96,9 +81,6 @@ homes$Price <- gsub(",|\u20AC", "", homes$Price)
 hits <- grep(pattern = "[[:alpha:]]", x = homes$Price)
 noPrice <- homes[hits,]
 clean <- homes[-hits,]
-
-# Shift cells right if number in type
-#hits <- grep(pattern = "[[:digit:]]", x = clean$Type)
 
 # Get price change details
 hits <- grep(pattern = "[[:digit:]]", x = clean$Type2)
@@ -153,4 +135,5 @@ clean$Type2 <- NULL
 # Trim to useful information
 clean <- clean[,-c(12:53)]
 
+# Write data to file
 write.csv(clean, "input/properties.csv", row.names = FALSE)
