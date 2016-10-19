@@ -38,11 +38,6 @@ while(i < 100) {
     i <- i + 10
 }
 
-<<<<<<< HEAD
-=======
-
-
->>>>>>> 02d6a6b3ce833e991f4f1b700b86b31bfaabbb9e
 # Convert every cell to character type
 property[] <- lapply(property, as.character)
 
