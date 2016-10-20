@@ -1,20 +1,15 @@
 myData <- reactive({
-        if(input$smooth == TRUE){
-            data <- switch(input$example_ds,
-                           "mtcars" = mtcars) 
+            data <- read.csv("input/properties.csv", header = TRUE, stringsAsFactors = TRUE)
             data
-        }
-        else{
-            inFile <- input$file1
-            if (is.null(inFile)) return(NULL)
-            data <- read.csv(inFile$datapath, header=input$header, sep=input$sep, 
-                             quote=input$quote)
-            data   
-        }
+})
 
+output$location <- renderUI({
+    areas <- levels(myData()[["AddressSix"]])
+    
+    selectInput("area", "Location", choices = areas)
 })
 
 # Render the data table on tab 1
-output$contents <- renderTable({
-    myData()
-})
+output$contents <- renderDataTable(
+    datatable(myData(), options = list(pageLength = 25))
+)

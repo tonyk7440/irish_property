@@ -3,7 +3,7 @@ tabPanel("Data",
              sidebarPanel(
                  checkboxInput("smooth", "Use Example Dataset"),
                  conditionalPanel("input.smooth == true",
-                     selectInput("example_ds", "Data set", choices = c("mtcars"))
+                                  uiOutput("location")
                  ),
                  fileInput('file1', 'Choose CSV File',
                            accept=c('text/csv', 
@@ -23,7 +23,7 @@ tabPanel("Data",
                               '"')
              ),
              mainPanel(
-                 tableOutput('contents')                 
+                 dataTableOutput('contents')                 
              )
          )
 )

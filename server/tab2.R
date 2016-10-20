@@ -24,7 +24,7 @@ observeEvent(myData(), ({
     
     # Update changes in Title
     observe({
-        t <- "Title"
+        t <- levels(myData()["AddressSix"])
         
         updateTextInput(session, inputId = "title", value = t)
     })
@@ -78,11 +78,23 @@ observeEvent(myData(), ({
     
     
     plotInput <- function(){
-        pc <- ggplot(myData(), aes_string(input$x_axis, y=input$y_axis)) +
-            geom_point() +
-            labs(x=input$x_label,y=input$y_label) +
-            ggtitle(input$title) +
-            theme_bw()
+        numerics <- c("Photos", "Price", "Beds", "Baths")
+        
+        if((input$x_axis %in% numerics) & (input$y_axis %in% numerics)) {
+            pc <- ggplot(myData(), aes_string(input$x_axis, y=input$y_axis)) +
+                geom_point() +
+                labs(x=input$x_label,y=input$y_label) +
+                ggtitle(input$title) +
+                theme_bw()
+        }
+        else{
+            pc <- ggplot(myData(), aes_string(input$x_axis, y=input$y_axis)) +
+                geom_boxplot() +
+                labs(x=input$x_label,y=input$y_label) +
+                ggtitle(input$title) +
+                theme_bw()
+        }
+
         
         # pc <- switch(input$ggplot_scaletype,
         #             normal =

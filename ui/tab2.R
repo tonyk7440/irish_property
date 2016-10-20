@@ -1,4 +1,4 @@
-tabPanel("Plot",
+tabPanel("Boxplot",
          sidebarLayout(
              sidebarPanel(
                  uiOutput("x_axis"),

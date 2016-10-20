@@ -12,9 +12,9 @@ property <- data.frame()
 
 i <- 0
 
-while(i < 100) {
+while(i < 1000) {
     if( i < 10) {
-        stub <- c("http://www.daft.ie/cork-city/property-for-sale/")
+        stub <- c("http://www.daft.ie/ireland/property-for-sale/?s%5Bsort_by%5D=date&s%5Bsort_type%5D=d")
         html <- read_html(stub)
         cast <- html_nodes(html,"#sr_content .truncate a , .info li, .price, .search_result_title_box a, .date_entered") %>% 
             html_text(trim=TRUE) %>% ifelse(. == "", NA, .) %>%
@@ -22,7 +22,7 @@ while(i < 100) {
         cast[1] <- paste("1. \n \n ", cast[1])
     }
     else{
-        stub <- c("http://www.daft.ie/cork-city/property-for-sale/?offset=")
+        stub <- c("http://www.daft.ie/ireland/property-for-sale/?s%5Bsort_by%5D=date&s%5Bsort_type%5D=d&offset=")
         link <- paste(stub,i, sep = "")
         print(paste("Visiting Link: ", link))
         html <- read_html(link)
@@ -107,6 +107,7 @@ clean$Type <- str_replace_all(clean$Type, " For Sale| House", "")
 
 # Change column types
 clean$AddressFive <- as.factor(clean$AddressFive)
+clean$AddressSix <- as.factor(clean$AddressSix)
 clean$Type <- as.factor(clean$Type)
 clean$Photos <- as.numeric(clean$Photos)
 clean$Price <- as.numeric(clean$Price)
@@ -133,5 +134,7 @@ clean$Type2 <- NULL
 # Trim to useful information
 clean <- clean[,-c(12:53)]
 
+final_df <- clean %>% drop_na(Price)
+
 # Write data to file
-write.csv(clean, "input/properties.csv", row.names = FALSE)
+write.csv(final_df, "input/properties.csv", row.names = FALSE)
