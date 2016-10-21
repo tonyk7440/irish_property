@@ -11,7 +11,8 @@ output$location <- renderUI({
 output$checkbox <- renderUI({
     if ( is.null(input$show_checkbox) ) { return(NULL) }
     if ( input$show_checkbox == 0 ) { return(NULL) }
-    return(selectInput("specy", "Location", choices = levels(data[["AddressSix"]])))
+    return(selectizeInput(
+        'specy', 'Location', choices = levels(data[["AddressSix"]]), multiple = TRUE))
 })
 
 # Render the data table on tab 1
