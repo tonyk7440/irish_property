@@ -4,7 +4,7 @@ library(Cairo)
 library(DT)
 
 filtered_data <- reactive({
-    filtered_data <- data[data[["AddressSix"]] == input$specy, ]
+    filtered_data <- data[data[["AddressSix"]] %in% input$specy, ]
 })
 
 output$x_axis <- renderUI({

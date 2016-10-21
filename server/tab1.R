@@ -1,6 +1,4 @@
 data <- read.csv("input/properties.csv", header = TRUE, stringsAsFactors = TRUE)
-#data <- filter(data, AddressSix == input$area)
-
 
 output$location <- renderUI({
     areas <- levels(data[["AddressSix"]])
@@ -16,11 +14,10 @@ output$selectbox <- renderUI({
 })
 
 # Render the data table on tab 1
-output$tbl <- renderDataTable(datatable({
+output$tbl <- DT::renderDataTable(datatable({
     if ( is.null(input$specy) ) { return(data) }
     if ( length(input$specy) == 0 ) { return(data) }
-    data[data[["AddressSix"]] == input$specy, ]
+    data[data[["AddressSix"]] %in% input$specy, ]
 }),
-options = list(pageLength = 10, autoWidth = TRUE),
-rownames= FALSE)
+options = list(pageLength = 10, autoWidth = TRUE),rownames= FALSE)
     

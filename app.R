@@ -1,5 +1,6 @@
 library(shiny)
 library(shinydashboard)
+library(DT)
 
 ui <- dashboardPage(
     dashboardHeader(title = "Data Visualiser"),
