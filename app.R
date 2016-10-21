@@ -1,15 +1,21 @@
 library(shiny)
+library(shinydashboard)
 
-ui <- fluidPage(
-    # Some custom CSS
-    tags$head(
-        tags$link(rel = "stylesheet", type = "text/css", href = "www/styles.css")
-    ), 
-    navbarPage(
-        title = "Data Visualiser",
+ui <- dashboardPage(
+    dashboardHeader(title = "Data Visualiser"),
+    dashboardSidebar(
+        sidebarMenu(
+            menuItem("Dashboard", tabName = "Data", icon = icon("dashboard")),
+            menuItem("Widgets", tabName = "Boxplot", icon = icon("th"))
+
+            )
+    ),
+    dashboardBody(
+        tabItems(
         # include the UI for each tab
         source(file.path("ui", "tab1.R"),  local = TRUE)$value,
         source(file.path("ui", "tab2.R"),  local = TRUE)$value
+        )
     )
 )
 server <- function(input, output, session) {

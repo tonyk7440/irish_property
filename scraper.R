@@ -136,5 +136,8 @@ clean <- clean[,-c(12:53)]
 
 final_df <- clean %>% drop_na(Price)
 
+# Drop columns non-essential for app
+final <- subset(final_df, select=-c("AddressOne", "AddressTwo", "AddressThree", "priceChange"))
+
 # Write data to file
-write.csv(final_df, "input/properties.csv", row.names = FALSE)
+write.csv(final, "input/properties.csv", row.names = FALSE)

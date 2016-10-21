@@ -1,8 +1,7 @@
-tabPanel("Data",
+tabItem("Data",
          sidebarLayout(
              sidebarPanel(
-                 actionButton("show_checkbox", "Show Choices"),
-                 uiOutput("checkbox")
+                 uiOutput("selectbox")
              ),
              mainPanel(
                  dataTableOutput('tbl')                 
