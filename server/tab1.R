@@ -1,5 +1,9 @@
 data <- read.csv("input/properties.csv", header = TRUE, stringsAsFactors = TRUE)
 
+createLink <- function(val) {
+    sprintf('<a href="https://%s" target="_blank" class="btn btn-primary">Info</a>',val)
+}
+
 output$location <- renderUI({
     areas <- levels(data[["AddressSix"]])
     
@@ -15,9 +19,11 @@ output$selectbox <- renderUI({
 
 # Render the data table on tab 1
 output$tbl <- DT::renderDataTable(datatable({
+    data$link <- createLink(data$url)
     if ( is.null(input$pick_county) ) { return(data) }
     if ( length(input$pick_county) == 0 ) { return(data) }
-    data[data[["AddressSix"]] %in% input$pick_county, ]
+    return(data[data[["AddressSix"]] %in% input$pick_county, ])
 }),
-options = list(pageLength = 10, autoWidth = TRUE),rownames= FALSE)
+options = list(pageLength = 10, autoWidth = TRUE, columnDefs = list(list(visible=FALSE, targets=c(8)))),
+escape = FALSE ,rownames= FALSE)
     
