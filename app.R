@@ -6,8 +6,8 @@ ui <- dashboardPage(
     dashboardHeader(title = "Data Visualiser"),
     dashboardSidebar(
         sidebarMenu(
-            menuItem("Dashboard", tabName = "Data", icon = icon("dashboard")),
-            menuItem("Widgets", tabName = "Boxplot", icon = icon("th"))
+            menuItem("Pick Area", tabName = "Data", icon = icon("search")),
+            menuItem("Plot", tabName = "Boxplot", icon = icon("area-chart"))
 
             )
     ),

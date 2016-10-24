@@ -4,19 +4,19 @@ library(Cairo)
 library(DT)
 
 filtered_data <- reactive({
-    filtered_data <- data[data[["AddressSix"]] %in% input$specy, ]
+    filtered_data <- data[data[["AddressSix"]] %in% input$pick_county, ]
 })
 
 output$x_axis <- renderUI({
     cols <- names(filtered_data())
     
-    selectInput("x_axis", "x-axis",  as.list(cols), selected = cols[7])
+    selectInput("x_axis", "x-axis",  as.list(cols))
 })
 
 output$y_axis <- renderUI({
     cols <- names(filtered_data())
     
-    selectInput("y_axis", "y-axis",  as.list(cols), selected = cols[9])
+    selectInput("y_axis", "y-axis",  as.list(cols))
 })
 
 # Update changes in Title
@@ -43,16 +43,21 @@ observe({
 
 plotInput <- function(){
     numerics <- c("Photos", "Price", "Beds", "Baths")
-    
-    if((input$x_axis %in% numerics) & (input$y_axis %in% numerics)) {
-        pc <- ggplot(filtered_data(), aes_string(input$x_axis, y=input$y_axis)) +
+    facts <- c("AddressFour", "AddressFive", "AddressSix", "Type", "agent")
+    new_data <- filtered_data()
+    if(input$x_axis == "agent" | input$y_axis == "agent") {
+        new_data <- new_data %>% drop_na(agent)
+    }
+    if(((input$x_axis %in% numerics) & (input$y_axis %in% numerics)) |
+       (input$x_axis %in% facts) & (input$y_axis %in% facts)) {
+        pc <- ggplot(new_data, aes_string(input$x_axis, y=input$y_axis)) +
             geom_point() +
             labs(x=input$x_label,y=input$y_label) +
             ggtitle(input$title) +
             theme_bw()
     }
     else{
-        pc <- ggplot(filtered_data(), aes_string(input$x_axis, y=input$y_axis)) +
+        pc <- ggplot(new_data, aes_string(input$x_axis, y=input$y_axis)) +
             geom_boxplot() +
             labs(x=input$x_label,y=input$y_label) +
             ggtitle(input$title) +
@@ -90,7 +95,7 @@ output$plot <- renderPlot({
 })
 
 output$downloadPlot <- downloadHandler(
-    filename = function() { paste(input$dataset, '.png', sep='') },
+    filename = function() { paste('image', '.png', sep='') },
     content = function(file) {
         ggsave(file, plot = plotInput(), device = "png")
     }
