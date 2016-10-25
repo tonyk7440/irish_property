@@ -10,6 +10,20 @@ output$location <- renderUI({
     selectInput("area", "Location", choices = areas)
 })
 
+output$numberBox <- renderInfoBox({
+    infoBox(
+        "Properties", nrow(filtered_data()), icon = icon("home"),
+        color = "purple"
+    )
+})
+output$averagePriceBox <- renderInfoBox({
+    df <- filtered_data()
+    infoBox(
+        "Average Price", prettyNum(paste("\u20ac",round(mean(df$Price))), big.mark = ","), icon = icon("money"),
+        color = "green", width = 8
+    )
+})
+
 output$selectbox <- renderUI({
     # if ( is.null(input$show_checkbox) ) { return(NULL) }
     # if ( input$show_checkbox == 0 ) { return(NULL) }

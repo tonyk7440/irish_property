@@ -4,7 +4,8 @@ library(Cairo)
 library(DT)
 
 filtered_data <- reactive({
-    filtered_data <- data[data[["AddressSix"]] %in% input$pick_county, ]
+    if ( is.null(input$pick_county) ) { return(data) }
+    return(filtered_data <- data[data[["AddressSix"]] %in% input$pick_county, ])
 })
 
 output$x_axis <- renderUI({
