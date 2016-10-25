@@ -7,8 +7,8 @@ ui <- dashboardPage(
     dashboardSidebar(
         sidebarMenu(
             menuItem("Pick Area", tabName = "Data", icon = icon("search")),
-            menuItem("Plot", tabName = "Boxplot", icon = icon("area-chart")),
-            uiOutput("menuItem")
+            uiOutput("menuItem"),
+            menuItem("Plot", tabName = "Boxplot", icon = icon("area-chart"))
             )
     ),
     dashboardBody(

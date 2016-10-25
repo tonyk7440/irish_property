@@ -38,6 +38,6 @@ output$tbl <- DT::renderDataTable(datatable({
     if ( length(input$pick_county) == 0 ) { return(data) }
     return(data[data[["AddressSix"]] %in% input$pick_county, ])
 }),
-options = list(pageLength = 10, autoWidth = TRUE, columnDefs = list(list(visible=FALSE, targets=c(8)))),
+options = list(pageLength = 5, autoWidth = TRUE, columnDefs = list(list(visible=FALSE, targets=c(8)))),
 escape = FALSE ,rownames= FALSE)
     
