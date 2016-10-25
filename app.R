@@ -1,6 +1,7 @@
 library(shiny)
 library(shinydashboard)
 library(DT)
+library(scales)
 
 ui <- dashboardPage(
     dashboardHeader(title = "Explore Properties"),

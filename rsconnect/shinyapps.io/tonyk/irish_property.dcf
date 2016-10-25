@@ -3,8 +3,9 @@ title: irish_property
 account: tonyk
 server: shinyapps.io
 appId: 132999
-bundleId: 596180
+bundleId: 596629
 url: https://tonyk.shinyapps.io/irish_property/
-when: 1477412486.32865
+when: 1477433144.08306
 asMultiple: FALSE
 asStatic: FALSE
+ignoredFiles: server/tabScatter.R|ui/tabBox.R|ui/tabHist.R|ui/tabScatter.R

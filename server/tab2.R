@@ -41,7 +41,19 @@ observe({
     updateTextInput(session, inputId = "y_label", value = y)
 })
 
+# Add faceting option
+output$facet_grid <- renderUI({
+    cols <- names(filtered_data())
+    
+    selectInput("r_split", "Row split: ",  as.list(cols))
+    selectInput("c_split", "Column split: ",  as.list(cols))
+})
 
+output$wrap_grid <- renderUI({
+    cols <- names(filtered_data())
+    
+    selectInput("split_by", "Split by: ",  as.list(cols))
+})
 plotInput <- function(){
     numerics <- c("Photos", "Price", "Beds", "Baths")
     facts <- c("AddressFour", "AddressFive", "AddressSix", "Type", "agent")
@@ -65,8 +77,15 @@ plotInput <- function(){
             theme_bw()
     }
 
+    # log x
+    if(input$log_x)
+        pc <- pc + scale_x_log10(breaks = trans_breaks('log10', function(x) 10^x), labels = trans_format('log10', math_format(10^.x)))
     
-    # Need to pass faceting specs as strings
+    # log y
+    if(input$log_y)
+        pc <- pc + scale_y_log10(breaks = trans_breaks('log10', function(x) 10^x), labels = trans_format('log10', math_format(10^.x)))
+    
+    # Need to pass loess specs
     pc <- switch(input$loess_op,
                 none = pc,
                 loess = pc + stat_smooth(se = FALSE),
