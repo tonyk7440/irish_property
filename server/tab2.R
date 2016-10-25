@@ -11,13 +11,13 @@ filtered_data <- reactive({
 output$x_axis <- renderUI({
     cols <- names(filtered_data())
     
-    selectInput("x_axis", "x-axis",  as.list(cols))
+    selectInput("x_axis", "x-axis",  as.list(cols), selected = cols[7])
 })
 
 output$y_axis <- renderUI({
     cols <- names(filtered_data())
     
-    selectInput("y_axis", "y-axis",  as.list(cols))
+    selectInput("y_axis", "y-axis",  as.list(cols), selected = cols[6])
 })
 
 # Update changes in Title

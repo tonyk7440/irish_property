@@ -3,12 +3,12 @@ library(shinydashboard)
 library(DT)
 
 ui <- dashboardPage(
-    dashboardHeader(title = "Data Visualiser"),
+    dashboardHeader(title = "Explore Properties"),
     dashboardSidebar(
         sidebarMenu(
             menuItem("Pick Area", tabName = "Data", icon = icon("search")),
-            menuItem("Plot", tabName = "Boxplot", icon = icon("area-chart"))
-
+            menuItem("Plot", tabName = "Boxplot", icon = icon("area-chart")),
+            uiOutput("menuItem")
             )
     ),
     dashboardBody(
@@ -23,6 +23,11 @@ server <- function(input, output, session) {
     # Include the logic (server) for each tab
     source(file.path("server", "tab1.R"),  local = TRUE)$value
     source(file.path("server", "tab2.R"),  local = TRUE)$value
+
+    output$menuItem <- renderUI({
+        return(selectizeInput(
+            'pick_county', 'Location', choices = levels(data[["AddressSix"]]), multiple = TRUE))
+    })
 }
 
 shinyApp(ui = ui, server = server)

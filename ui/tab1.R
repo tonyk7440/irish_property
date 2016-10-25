@@ -5,12 +5,7 @@ tabItem("Data",
             # Dynamic infoBoxes
             infoBoxOutput("averagePriceBox")
         ),
-         sidebarLayout(
-             sidebarPanel(
-                 uiOutput("selectbox")
-             ),
              mainPanel(
                  dataTableOutput('tbl')                 
              )
-         )
 )
